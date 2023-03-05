@@ -6,10 +6,12 @@ In a typical Dash application, children are attached to parent components as eit
 Either approach can lead to verbose code, with lines dedicated entirely to parentheses and many layers of indentation (especially when deep trees of components are constructed).
 
 This package supports an alternative approach:
-- Compositions of Dash components are defined using generator functions along with a `compose` decorator.
-- Within those generator functions, Dash components can be used as context managers.
+- An abstract `Composition` class is provided for creating compositions of Dash components.
+- That class requires a `render` method to be defined - this should yield Dash components.
+- Within the `render` method, components can be used as context managers.
 - If a component is yielded from within another component's context, it will become a child of that component.
 - If a component is used as a context manager from within another component's context, it will also become a child of that component.
+- Those parent-child relationships are instantiated when the `Composition` object is called.
 
 # Usage
 
@@ -17,21 +19,22 @@ This package supports an alternative approach:
 from dash import Dash
 from dash.html import Div, Span
 
-from dash_compose import compose
+from dash_compose import Composition
 
 
-@compose
-def render():
-    with Div() as layout:
-        with Div():
-            yield Span("Hello")
-            yield " "
-            yield Span("world!")
-    return layout
+class Layout(Composition):
+    @staticmethod
+    def render():
+        with Div() as layout:
+            with Div():
+                yield Span("Hello")
+                yield " "
+                yield Span("world!")
+        return layout
 
 
 app = Dash()
-app.layout = render()
+app.layout = Layout()
 
 if __name__ == "__main__":
     app.run_server(debug=True)

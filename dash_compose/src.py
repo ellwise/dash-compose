@@ -1,7 +1,7 @@
+from abc import ABC, abstractmethod
 from collections import defaultdict
-from functools import wraps
 from threading import current_thread
-from typing import Any, Callable, Generator, Optional, Union
+from typing import Any, Generator, Union
 
 from dash.development.base_component import Component
 
@@ -36,29 +36,21 @@ Component.__exit__ = __exit__
 Component._stack = defaultdict(list)
 
 
-Child = Optional[Union[Component, Any]]
-Composition = Generator[Child, None, Any]
-Composer = Callable[..., Composition]
+Child = Union[Component, Any]
 
 
-def compose(func: Composer) -> Callable:
-    """
-    Take a Composer* and turn it into a Renderer**.
+class Composition(ABC):
+    @abstractmethod
+    def render(self, *args, **kwargs) -> Generator[Child, None, Any]:
+        pass
 
-    * A generator of Dash Components
-    ** A function which attaches Dash Components to one another
-    """
-
-    @wraps(func)
-    def wrapper(*args, **kwargs):
+    def __call__(self, *args, **kwargs):
         thread_id = current_thread()
         stack = Component._stack[thread_id]
-        generator = func(*args, **kwargs)
+        generator = self.render(*args, **kwargs)
         try:
             while True:
                 component = next(generator)
                 stack[-1] += component
         except StopIteration as stop:
             return stop.value
-
-    return wrapper
