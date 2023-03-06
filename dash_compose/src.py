@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 from collections import defaultdict
-from threading import current_thread
-from typing import Any, Generator, Union
+from functools import wraps
+from inspect import currentframe
+from typing import Any, Callable, Generator, Union
 
 from dash.development.base_component import Component
 
@@ -16,9 +17,14 @@ def __iadd__(self, child):
     return self
 
 
+def _get_generator_id():
+    # _get_generator_id >> __enter__/__exit__ >> Component? >> Composition.__call__.composer
+    return id(currentframe().f_back.f_back.f_back.f_locals["generator"])
+
+
 def __enter__(self):
-    thread_id = current_thread()  # identify the thread
-    stack = Component._stack[thread_id]  # and fetch its stack
+    stack_id = _get_generator_id()  # identify the generator
+    stack = Component._stack[stack_id]  # and fetch its stack
     if stack:  # if there's a current context
         stack[-1] += self  # add self to it
     stack.append(self)  # replace current context with self
@@ -26,8 +32,8 @@ def __enter__(self):
 
 
 def __exit__(self, *args):
-    thread_id = current_thread()  # identify the thread
-    Component._stack[thread_id].pop(-1)  # remove the last context (which will be self)
+    stack_id = _get_generator_id()  # identify the generator
+    Component._stack[stack_id].pop(-1)  # remove the last context (which will be self)
 
 
 Component.__iadd__ = __iadd__
@@ -37,20 +43,30 @@ Component._stack = defaultdict(list)
 
 
 Child = Union[Component, Any]
+Renderer = Generator[Child, None, Any]
 
 
-class Composition(ABC):
-    @abstractmethod
-    def render(self, *args, **kwargs) -> Generator[Child, None, Any]:
-        pass
-
-    def __call__(self, *args, **kwargs):
-        thread_id = current_thread()
-        stack = Component._stack[thread_id]
-        generator = self.render(*args, **kwargs)
+def compose(func: Callable[..., Renderer]) -> Callable:
+    @wraps(func)
+    def wrapper(*args, **kwargs) -> Any:
+        generator = func(*args, **kwargs)
+        stack_id = id(generator)
+        stack = Component._stack[stack_id]
         try:
             while True:
                 component = next(generator)
                 stack[-1] += component
         except StopIteration as stop:
             return stop.value
+
+    return wrapper
+
+
+class Composition(ABC):
+    @abstractmethod
+    def render(self, *args, **kwargs) -> Renderer:
+        pass
+
+    def __call__(self, *args, **kwargs):
+        composer = compose(self.render)
+        return composer(*args, **kwargs)

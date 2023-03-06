@@ -1,1 +1,1 @@
-from dash_compose.src import Composition
+from dash_compose.src import Composition, compose
