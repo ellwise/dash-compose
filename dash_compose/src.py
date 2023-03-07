@@ -1,5 +1,3 @@
-from abc import ABC, abstractmethod
-from collections import defaultdict
 from functools import wraps
 from inspect import currentframe
 from typing import Any, Callable, Generator, Union
@@ -17,14 +15,14 @@ def __iadd__(self, child):
     return self
 
 
-def _get_generator_id():
-    # _get_generator_id >> __enter__/__exit__ >> Component? >> Composition.__call__.composer
-    return id(currentframe().f_back.f_back.f_back.f_locals["generator"])
+def _get_stack():
+    # _get_stack >> __enter__/__exit__ >> func >> wrapper
+    stack = currentframe().f_back.f_back.f_back.f_locals["stack"]
+    return stack
 
 
 def __enter__(self):
-    stack_id = _get_generator_id()  # identify the generator
-    stack = Component._stack[stack_id]  # and fetch its stack
+    stack = _get_stack()  # fetch the stack from a calling frame
     if stack:  # if there's a current context
         stack[-1] += self  # add self to it
     stack.append(self)  # replace current context with self
@@ -32,41 +30,31 @@ def __enter__(self):
 
 
 def __exit__(self, *args):
-    stack_id = _get_generator_id()  # identify the generator
-    Component._stack[stack_id].pop(-1)  # remove the last context (which will be self)
+    stack = _get_stack()  # fetch the stack from a calling frame
+    stack.pop(-1)  # remove the last context (which will be self)
 
 
 Component.__iadd__ = __iadd__
 Component.__enter__ = __enter__
 Component.__exit__ = __exit__
-Component._stack = defaultdict(list)
 
 
 Child = Union[Component, Any]
-Renderer = Generator[Child, None, Any]
+Composer = Generator[Child, None, Any]
 
 
-def compose(func: Callable[..., Renderer]) -> Callable:
+def compose(func: Callable[..., Composer]) -> Callable:
     @wraps(func)
     def wrapper(*args, **kwargs) -> Any:
         generator = func(*args, **kwargs)
-        stack_id = id(generator)
-        stack = Component._stack[stack_id]
+        stack = []  # this will be fetched via calling frames by context managers in the generator
         try:
             while True:
                 component = next(generator)
+                if not stack:
+                    raise Exception(f"Cannot yield {component} outside a context manager.")
                 stack[-1] += component
         except StopIteration as stop:
             return stop.value
 
     return wrapper
-
-
-class Composition(ABC):
-    @abstractmethod
-    def render(self, *args, **kwargs) -> Renderer:
-        pass
-
-    def __call__(self, *args, **kwargs):
-        composer = compose(self.render)
-        return composer(*args, **kwargs)

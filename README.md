@@ -1,22 +1,22 @@
 # Description
 
-This package provides an alternative way of composing collections of Plotly Dash components.
+This package provides an new way of composing collections of Plotly Dash components.
 
 In a typical Dash application, children are attached to parent components as either the first argument or via the children keyword argument.
 Either approach can lead to verbose code, with lines dedicated entirely to parentheses and many layers of indentation (especially when deep trees of components are constructed).
 
-This package supports an alternative approach.
-The basic idea is that you define generator functions that yield Dash components, and structure those functions using Dash components as context managers.
-If a component is yielded from within the context of another component, it will become a child of that component.
-If contexts are nested, then the component managing the inner context will become a child of the component managing the outer context.
-Scroll down to see examples of what this looks like in practice.
+This package supports a tidier approach.
+The basic idea is that you define compositions of Dash components via generator functions.
+These generators should yield Dash components, and they should be structured using Dash components as context managers.
+- If a component is yielded from within the context of another component, it will become a child of that component.
+- If contexts are nested, then the component managing the inner context will become a child of the component managing the outer context.
+- If you attempt to yield a component without first entering another component's context, then an exception will be thrown.
+Scroll down to see examples of what this looks like in practice!
 
-There are two approaches you can take to instantiate the parent-child relationships you've specified.
-The first is to decorate your generator function with `@compose`.
-This will transform it into an ordinary function that takes the same inputs and returns the same outputs, rather than returning a generator.
-The second is to define your generator function as the `render` method of a class that inherits from `Composition`.
-Objects of this class can then be called like ordinary functions.
-Under the hood these approaches are identical: `dash-compose` uses the `@compose` decorator within `Composition.__call__` to wrap `Composition.render`.
+The instantiation of parent-child relationships is achieved through the `@compose` decorator.
+This will take your generator function and transform it into a regular function.
+That function will take the same inputs and return whatever output your original generator returns.
+Note that it will not return a generator object, unlike the original generator function!
 
 # Usage
 
@@ -24,27 +24,18 @@ Under the hood these approaches are identical: `dash-compose` uses the `@compose
 from dash import Dash
 from dash.html import Div, Span
 
-from dash_compose import Composition, compose
+from dash_compose import compose
 
 
 @compose
-def hello():
-    with Span() as layout:
-        yield "Hello "
-    return layout
+def hello_world():
+    with Div() as container:
+        yield Span("Hello ")
+        with Span():
+            yield "world"
+            yield "!"
+    return container
 
-
-class HelloWorld(Composition):
-    @staticmethod
-    def render():
-        with Div() as layout:
-            with Div():
-                yield hello()
-                yield "world!"
-        return layout
-
-
-hello_world = HelloWorld()
 
 app = Dash()
 app.layout = hello_world()
