@@ -6,6 +6,7 @@ from dash.development.base_component import Component
 
 
 def __iadd__(self, child):
+    """Add a child to this component's children"""
     if self.children is None:
         self.children = child
     elif isinstance(self.children, list):
@@ -15,46 +16,55 @@ def __iadd__(self, child):
     return self
 
 
-def _get_stack():
-    # _get_stack >> __enter__/__exit__ >> func >> wrapper
-    stack = currentframe().f_back.f_back.f_back.f_locals["stack"]
-    return stack
+def _get_contexts():
+    """Fetch contexts from the @compose decorator via the call stack"""
+    # _get_contexts >> __enter__/__exit__ >> func >> wrapper
+    return currentframe().f_back.f_back.f_back.f_locals["contexts"]
 
 
 def __enter__(self):
-    stack = _get_stack()  # fetch the stack from a calling frame
-    if stack:  # if there's a current context
-        stack[-1] += self  # add self to it
-    stack.append(self)  # replace current context with self
+    """Add self as a child to any existing context, then add self to the list of contexts"""
+    contexts = _get_contexts()  # fetch the context stack from a calling frame
+    if contexts:  # if there's an active context
+        contexts[-1] += self  # add self to its children
+    contexts.append(self)  # replace the active context with self
     return self
 
 
 def __exit__(self, *args):
-    stack = _get_stack()  # fetch the stack from a calling frame
-    stack.pop(-1)  # remove the last context (which will be self)
+    """Remove self from the list of contexts"""
+    contexts = _get_contexts()  # fetch the context stack from a calling frame
+    contexts.pop(-1)  # remove the currently active context (this will be self)
 
 
+# patch the Component class to enable easy addition of children
 Component.__iadd__ = __iadd__
+
+# patch the Component class to allow use as a context manager
 Component.__enter__ = __enter__
 Component.__exit__ = __exit__
 
 
+# define some type aliases for communicating the intent of compose
 Child = Union[Component, Any]
 Composer = Generator[Child, None, Any]
 
 
-def compose(func: Callable[..., Composer]) -> Callable:
+def compose(func: Callable[..., Composer]) -> Callable[..., Any]:
+    """Instantiate parent-child relationships specified by a dash-compose generator"""
+
     @wraps(func)
     def wrapper(*args, **kwargs) -> Any:
-        generator = func(*args, **kwargs)
-        stack = []  # this will be fetched via calling frames by context managers in the generator
-        try:
+        contexts = []  # a stack containing all active context managers
+        # contexts will be fetched through the call stack by context managers within the generator
+        composer = func(*args, **kwargs)  # instantiate the Composer
+        try:  # fetch components from the Composer until it is exhausted
             while True:
-                component = next(generator)
-                if not stack:
+                component = next(composer)  # proceed to the next component that is yielded
+                if not contexts:  # throw an exception if there is no active context
                     raise Exception(f"Cannot yield {component} outside a context manager.")
-                stack[-1] += component
+                contexts[-1] += component  # add to the current context's children
         except StopIteration as stop:
-            return stop.value
+            return stop.value  # return the same value as the original composer
 
     return wrapper
