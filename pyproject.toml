@@ -1,27 +1,27 @@
-[tool.black]
-line-length = 99
-
-[tool.isort]
-profile = "black"
-
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
 authors = [{name = "Elliott Wise", email = "ell.wise@gmail.com"}]
-description = "A package for simplifying Plotly Dash layout specifications"
+description = "A tool for composing tidy Plotly Dash applications"
 dependencies = ["dash"]
 license = {file = "LICENSE"}
 name = "dash-compose"
 readme = "README.md"
-version = "2023.03.05"
+version = "2023.03.07"
 
 [project.optional-dependencies]
-dev = ["black", "flake8", "isort", "pandas"]
+dev = ["black", "build", "flake8", "isort", "twine"]
 
 [project.urls]
 source = "https://github.com/ellwise/dash-compose"
+
+[tool.black]
+line-length = 99
+
+[tool.isort]
+profile = "black"
 
 [tool.setuptools]
 packages = ["dash_compose"]
