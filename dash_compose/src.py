@@ -46,12 +46,12 @@ Component.__exit__ = __exit__
 
 
 # define some type aliases for communicating the intent of compose
-Child = Union[Component, Any]
-Composer = Generator[Child, None, Any]
+Child = Union[Component, Any]  # any valid Dash component
+Composer = Generator[Child, None, Any]  # a dash-compose generator
 
 
-def compose(func: Callable[..., Composer]) -> Callable[..., Any]:
-    """Instantiate parent-child relationships specified by a dash-compose generator"""
+def composition(func: Callable[..., Composer]) -> Callable[..., Any]:
+    """Instantiate parent-child relationships specified by a dash-compose generator function"""
 
     @wraps(func)
     def wrapper(*args, **kwargs) -> Any:

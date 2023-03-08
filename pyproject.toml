@@ -9,7 +9,7 @@ dependencies = ["dash"]
 license = {file = "LICENSE"}
 name = "dash-compose"
 readme = "README.md"
-version = "2023.03.07"
+version = "2023.03.08"
 
 [project.optional-dependencies]
 dev = ["black", "build", "flake8", "isort", "twine"]
