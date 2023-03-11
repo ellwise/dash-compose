@@ -64,6 +64,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#hello-world" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -188,9 +193,59 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Home
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="." class="md-nav__link md-nav__link--active">
         Home
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hello-world" class="md-nav__link">
+    Hello world!
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compositions" class="md-nav__link">
+    Compositions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context-managers" class="md-nav__link">
+    Context managers
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nested-contexts" class="md-nav__link">
+    Nested contexts
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -244,6 +299,42 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hello-world" class="md-nav__link">
+    Hello world!
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compositions" class="md-nav__link">
+    Compositions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context-managers" class="md-nav__link">
+    Context managers
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nested-contexts" class="md-nav__link">
+    Nested contexts
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -262,7 +353,9 @@
 <p><strong>Dash Compose provides a tidier way of composing Plotly Dash layouts.</strong>
 Read about the motivation behind it <a href="motivation/">here</a>.
 I'm going to assume you already know how to build Dash applications, so let's get straight into an example!</p>
-<div class="language-py highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
+<h2 id="hello-world">Hello world!</h2>
+<p>The simple example below shows a complete Dash application, in which Dash Compose has been used to create a small tree of Dash components for the application's layout.</p>
+<div class="language-py highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">hello_world.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
 <span class="normal"><a href="#__codelineno-0-2"> 2</a></span>
 <span class="normal"><a href="#__codelineno-0-3"> 3</a></span>
 <span class="normal"><a href="#__codelineno-0-4"> 4</a></span>
@@ -302,14 +395,14 @@ I'm going to assume you already know how to build Dash applications, so let's ge
 </span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
 </span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20"></a>    <span class="n">app</span><span class="o">.</span><span class="n">run_server</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
-<p>This simple example shows a complete Dash application, in which Dash Compose has been used to create a tree of Dash components for the application's layout.
-When rendered as HTML, this looks like
+<p>When rendered as HTML, this looks like</p>
 <div class="language-html highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="p">&lt;</span><span class="nt">span</span><span class="p">&gt;</span>Hello <span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="p">&lt;</span><span class="nt">span</span><span class="p">&gt;</span>world!<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 </span></code></pre></div>
-Let's step through the layout portion of the example and see what's going on.</p>
+<p>Let's step through the layout portion of the example and see what's going on.</p>
+<h2 id="compositions">Compositions</h2>
 <div class="language-py highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-7"> 7</a></span>
 <span class="normal"><a href="#__codelineno-2-8"> 8</a></span>
 <span class="normal"><a href="#__codelineno-2-9"> 9</a></span>
@@ -328,6 +421,7 @@ Let's step through the layout portion of the example and see what's going on.</p
 There are no restrictions on the kinds of inputs this function takes, or on the outputs it returns.
 The role of the <code>@composition</code> decorator is to interpret the parent-child relationships that your function describes.
 Here, our function takes no inputs, and returns one output.</p>
+<h2 id="context-managers">Context managers</h2>
 <div class="language-py highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-7"> 7</a></span>
 <span class="normal"><a href="#__codelineno-3-8"> 8</a></span>
 <span class="normal"><a href="#__codelineno-3-9"> 9</a></span>
@@ -347,6 +441,7 @@ This indicates that they will be the parent in a parent-child relationship.
 To specify a child in that relationship, you can use the <code>yield</code> statement after the context has been entered.
 Within a component's context, you can have multiple <code>yield</code> statements, or indeed any Python code you like.
 Here, we have yielded a <code>Span</code> within a <code>Div</code>, so the <code>Span</code> becomes a child of the <code>Div</code>.</p>
+<h2 id="nested-contexts">Nested contexts</h2>
 <div class="language-py highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-7"> 7</a></span>
 <span class="normal"><a href="#__codelineno-4-8"> 8</a></span>
 <span class="normal"><a href="#__codelineno-4-9"> 9</a></span>
@@ -381,20 +476,6 @@ In this case, the <code>Span</code> managing the inner context will become a chi
 In this case, <code>"world!"</code> becomes a child of <code>Span</code>, and only has an indirect relationship with the outer <code>Div</code> (it is the grand-parent of the <code>Span</code>).
 Note here that we have yielded something that isn't a Dash component!
 This is fine, you are able to yield any Python object that is a valid child of a Dash component.</p>
-<div class="language-py highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-7"> 7</a></span>
-<span class="normal"><a href="#__codelineno-6-8"> 8</a></span>
-<span class="normal"><a href="#__codelineno-6-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-6-10">10</a></span>
-<span class="normal"><a href="#__codelineno-6-11">11</a></span>
-<span class="normal"><a href="#__codelineno-6-12">12</a></span>
-<span class="normal"><a href="#__codelineno-6-13">13</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7"></a><span class="nd">@composition</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8"></a><span class="k">def</span> <span class="nf">hello_world</span><span class="p">():</span>
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9"></a>    <span class="k">with</span> <span class="n">Div</span><span class="p">()</span> <span class="k">as</span> <span class="n">container</span><span class="p">:</span>
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10"></a>        <span class="k">yield</span> <span class="n">Span</span><span class="p">(</span><span class="s2">&quot;Hello &quot;</span><span class="p">)</span>
-</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11"></a><span class="hll">        <span class="k">with</span> <span class="n">Span</span><span class="p">():</span>
-</span></span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12"></a><span class="hll">            <span class="k">yield</span> <span class="s2">&quot;world!&quot;</span>
-</span></span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13"></a>    <span class="k">return</span> <span class="n">container</span>
-</span></code></pre></div></td></tr></table></div>
 
 
 
