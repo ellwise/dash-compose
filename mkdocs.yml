@@ -1,0 +1,23 @@
+site_name: Dash Compose
+theme:
+  features:
+    - content.code.copy
+  name: material
+  palette:
+    primary: pink
+    scheme: slate
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+nav:
+  - index.md
+  - installation.md
+  - motivation.md
+  - how.md
+plugins: []
+repo_url: https://github.com/ellwise/dash-compose

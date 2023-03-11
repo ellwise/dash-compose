@@ -2,3 +2,5 @@
 **.vscode
 **_dist
 **__pycache__
+requirements.txt
+site/*
