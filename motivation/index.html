@@ -218,47 +218,9 @@
         
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Motivation
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="./" class="md-nav__link md-nav__link--active">
         Motivation
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#a-hard-to-read-layout" class="md-nav__link">
-    A hard-to-read layout
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#an-easier-to-read-refactor" class="md-nav__link">
-    An easier-to-read refactor
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -299,28 +261,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#a-hard-to-read-layout" class="md-nav__link">
-    A hard-to-read layout
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#an-easier-to-read-refactor" class="md-nav__link">
-    An easier-to-read refactor
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -340,10 +280,15 @@
 <h1 id="motivation">Motivation</h1>
 <p>In a typical Dash application, child components are attached to parents as either the first argument to the parent's constructor, or via the <code>children</code> keyword argument.
 Either approach can lead to verbose code, with lines dedicated entirely to parentheses and many levels of indentation (especially when deep trees of components are constructed, and when code formatting tools are used).</p>
-<h2 id="a-hard-to-read-layout">A hard-to-read layout</h2>
-<p>To illustrate a badly-formatted Dash layout, consider the following code, which has been adapted from the Plotly Dash documentation <a href="https://dash.plotly.com/basic-callbacks">here</a>.
+<p>To illustrate a badly-formatted Dash layout, consider the code on the "Dash" tab below, which has been adapted from the Plotly Dash documentation <a href="https://dash.plotly.com/basic-callbacks">here</a>.
 The layout in that example has been refactored into a function with a clear tree-structure, and then formatted using <code>black</code>.
 Almost half the lines of code are just parentheses or braces, and there are seven levels of indentation.</p>
+<p>A much tidier version is presented on the Dash Compose tab.
+It halves both the number of lines of code and the number of levels of indentation.
+This improved code density reduces visual noise, making the tree-structure of the components much clearer.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Dash</label><label for="__tabbed_1_2">Dash Compose</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="language-py highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
 <span class="normal"><a href="#__codelineno-0-2"> 2</a></span>
 <span class="normal"><a href="#__codelineno-0-3"> 3</a></span>
@@ -424,10 +369,8 @@ Almost half the lines of code are just parentheses or braces, and there are seve
 </span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39"></a>        <span class="p">]</span>
 </span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40"></a>    <span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
-<h2 id="an-easier-to-read-refactor">An easier-to-read refactor</h2>
-<p>Let's refactor this code using Dash Compose.
-In doing so, we halve both the number of lines of code and the number of levels of indentation.
-This improved code density reduces visual noise, making the tree-structure of the components much clearer.</p>
+</div>
+<div class="tabbed-block">
 <div class="language-py highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1"> 1</a></span>
 <span class="normal"><a href="#__codelineno-1-2"> 2</a></span>
 <span class="normal"><a href="#__codelineno-1-3"> 3</a></span>
@@ -470,6 +413,9 @@ This improved code density reduces visual noise, making the tree-structure of th
 </span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20"></a>                <span class="k">yield</span> <span class="n">html</span><span class="o">.</span><span class="n">Td</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;x^x&quot;</span><span class="p">)</span>
 </span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21"></a>    <span class="k">return</span> <span class="n">container</span>
 </span></code></pre></div></td></tr></table></div>
+</div>
+</div>
+</div>
 
 
 
