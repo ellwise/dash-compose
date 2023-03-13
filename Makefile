@@ -20,7 +20,7 @@ format:
 	black .
 
 .PHONY: install
-install: compile
+install:
 	pip install -r requirements.txt
 	pip install -e .
 
