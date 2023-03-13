@@ -1,6 +1,7 @@
 **.egg-info
-**.vscode
-**_dist
 **__pycache__
+.ruff_cache
+.vscode
+_dist
 requirements.txt
 site/*
