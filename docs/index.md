@@ -1,5 +1,8 @@
-**Dash Compose provides a tidier way of composing Plotly Dash layouts.**
-Read about the motivation behind it [here](motivation.md), and install it from PyPI with `pip install dash-compose`.
+**Dash Compose provides a tidier way of composing [Plotly Dash](https://github.com/plotly/dash) layouts.**
+Read about the motivation behind it [here](motivation.md), and install it from PyPI with
+```
+pip install dash-compose
+```
 I'm going to assume you already know how to build Dash applications, so let's get straight into an example!
 
 ## Hello world!
